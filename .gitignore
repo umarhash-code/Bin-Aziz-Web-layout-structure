@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+.env
+.env.*
+
+# Editor/OS files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
