@@ -11,8 +11,10 @@ import FAQ from "./pages/FAQ";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Payment from "./pages/Payment";
 import Dashboard from "./pages/Dashboard";
+import Admin from "./pages/Admin";
 import AppDevelopment from "./pages/services/AppDevelopment";
 import EducationSystems from "./pages/services/EducationSystems";
 import ITCourses from "./pages/services/ITCourses";
@@ -49,8 +51,10 @@ function AppLayout() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsConditions />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
       {!isDashboardRoute ? <Footer /> : null}

@@ -812,6 +812,277 @@ li {
   color: #1e293b;
 }
 
+.auth-form {
+  text-align: left;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.auth-form input,
+.auth-form textarea,
+.auth-form select {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+}
+
+.auth-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.auth-error {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.auth-success {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.auth-link-btn {
+  border: 0;
+  background: transparent;
+  color: #2563eb;
+  text-align: left;
+  font-weight: 600;
+}
+
+.login-page {
+  min-height: calc(100vh - 180px);
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #f9fafb 0%, #eef2ff 100%);
+}
+
+.login-card {
+  width: min(440px, 100%);
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
+  text-align: left;
+  padding: 2rem;
+  gap: 1rem;
+  animation: loginSlideUp 0.45s ease both;
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+
+.login-card p {
+  margin: 0;
+  color: #4b5563;
+}
+
+.login-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.login-field > span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.login-input-wrap {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 0 0.75rem;
+  background: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-input-wrap:focus-within {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.16);
+}
+
+.login-input-wrap svg {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.login-input-wrap input {
+  border: 0;
+  outline: none;
+  width: 100%;
+  font: inherit;
+  color: #111827;
+  background: transparent;
+}
+
+.login-input-wrap input::placeholder {
+  color: #9ca3af;
+}
+
+.login-toggle-btn {
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-toggle-btn:hover {
+  color: #4f46e5;
+}
+
+.login-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.login-remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.login-remember input {
+  accent-color: #4f46e5;
+}
+
+.login-forgot-link {
+  color: #4f46e5;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.login-forgot-link:hover {
+  color: #4338ca;
+}
+
+.login-submit-btn {
+  width: 100%;
+  margin-top: 0.25rem;
+  border-radius: 12px;
+  background: #4f46e5;
+  border: 1px solid #4f46e5;
+}
+
+.login-submit-btn:hover {
+  background: #4338ca;
+  border-color: #4338ca;
+}
+
+.login-create-btn {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  min-height: 44px;
+  text-align: center;
+  color: #111827;
+  font-weight: 600;
+}
+
+.login-create-btn:hover {
+  border-color: #4f46e5;
+  color: #4f46e5;
+  background: #eef2ff;
+}
+
+@keyframes loginSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .login-page {
+    padding: 1rem;
+  }
+
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .login-options-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.blog-grid {
+  margin-top: 1.2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-card {
+  background: #fff;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.blog-card h2 {
+  margin-top: 0;
+}
+
+.blog-tags {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.admin-page {
+  padding: 2rem 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-users ul {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.admin-users li {
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 @keyframes coursesHeroFade {
   from {
     opacity: 0;
@@ -908,6 +1179,10 @@ li {
   .featured-content .course-enroll-btn {
     width: 100%;
     max-width: 100%;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr;
   }
 
   .testimonials-track {

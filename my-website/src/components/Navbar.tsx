@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type FC } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FaBars, FaBell, FaChevronDown, FaTimes, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaChevronDown, FaTimes } from "react-icons/fa";
 import binAzizLogo from "../assets/Bin Aziz.png";
+import { clearSession, getCurrentUser, isAdmin, isLoggedIn } from "../lib/auth";
 import "./Navbar.css";
 
 const Navbar: FC = () => {
@@ -9,10 +10,11 @@ const Navbar: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
-  const notificationMenuRef = useRef<HTMLDivElement | null>(null);
-  const isLoggedIn = localStorage.getItem("binazizLoggedIn") === "true";
+  const loggedIn = isLoggedIn();
+  const user = getCurrentUser();
+  const userInitial = (user?.name?.charAt(0) || "U").toUpperCase();
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 8);
@@ -37,9 +39,6 @@ const Navbar: FC = () => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(targetNode)) {
         setIsProfileOpen(false);
       }
-      if (notificationMenuRef.current && !notificationMenuRef.current.contains(targetNode)) {
-        setIsNotificationOpen(false);
-      }
     };
 
     document.addEventListener("mousedown", onClickOutside);
@@ -48,21 +47,15 @@ const Navbar: FC = () => {
 
   const closeMobileMenu = () => {
     setIsMenuOpen(false);
-    setIsNotificationOpen(false);
     setIsProfileOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("binazizLoggedIn");
+  const confirmLogout = () => {
+    clearSession();
+    setIsLogoutModalOpen(false);
     closeMobileMenu();
-    navigate("/");
+    navigate("/login");
   };
-
-  const notificationItems = [
-    "Payment completed successfully",
-    "Your Python course starts tomorrow",
-    "Certificate is now available",
-  ];
 
   return (
     <header className="premium-header-wrap">
@@ -83,56 +76,34 @@ const Navbar: FC = () => {
           </ul>
 
           <div className="premium-header-actions">
-            {!isLoggedIn ? (
+            {!loggedIn ? (
               <>
                 <Link to="/login" className="premium-login-btn" onClick={closeMobileMenu}>Login</Link>
+                <Link to="/signup" className="premium-login-btn" onClick={closeMobileMenu}>Signup</Link>
                 <Link to="/courses" className="premium-start-btn" onClick={closeMobileMenu}>Get Started</Link>
               </>
             ) : (
               <>
-                <div className="premium-menu-wrap" ref={notificationMenuRef}>
-                  <button
-                    type="button"
-                    className="premium-icon-btn"
-                    onClick={() => {
-                      setIsNotificationOpen((prev) => !prev);
-                      setIsProfileOpen(false);
-                    }}
-                    aria-label="Open notifications"
-                  >
-                    <FaBell aria-hidden="true" />
-                    <span className="premium-notification-dot" />
-                  </button>
-                  {isNotificationOpen ? (
-                    <div className="premium-dropdown-menu premium-notification-menu">
-                      {notificationItems.map((item) => (
-                        <p key={item}>{item}</p>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
-
                 <div className="premium-menu-wrap" ref={profileMenuRef}>
                   <button
                     type="button"
                     className="premium-profile-btn"
                     onClick={() => {
                       setIsProfileOpen((prev) => !prev);
-                      setIsNotificationOpen(false);
                     }}
                     aria-label="Open profile menu"
                   >
-                    <FaUserCircle aria-hidden="true" />
-                    <span>Umar</span>
+                    <span className="premium-avatar-circle" aria-hidden="true">{userInitial}</span>
+                    <span className="premium-profile-name">{user?.name ?? "User"}</span>
                     <FaChevronDown aria-hidden="true" className={isProfileOpen ? "is-rotated" : ""} />
                   </button>
 
                   {isProfileOpen ? (
                     <div className="premium-dropdown-menu">
-                      <Link to="/dashboard" onClick={closeMobileMenu}>Dashboard</Link>
-                      <Link to="/courses" onClick={closeMobileMenu}>My Courses</Link>
-                      <Link to="/dashboard#certificates" onClick={closeMobileMenu}>Certificates</Link>
-                      <button type="button" onClick={handleLogout}>Logout</button>
+                      <Link to="/dashboard" onClick={closeMobileMenu}>Profile</Link>
+                      <Link to="/dashboard#settings" onClick={closeMobileMenu}>Settings</Link>
+                      {isAdmin() ? <Link to="/admin" onClick={closeMobileMenu}>Admin Panel</Link> : null}
+                      <button type="button" className="premium-logout-link" onClick={() => setIsLogoutModalOpen(true)}>Logout</button>
                     </div>
                   ) : null}
                 </div>
@@ -153,6 +124,22 @@ const Navbar: FC = () => {
       </nav>
 
       {isMenuOpen ? <button type="button" className="premium-drawer-overlay" aria-label="Close menu" onClick={closeMobileMenu} /> : null}
+
+      {isLogoutModalOpen ? (
+        <div className="premium-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
+          <div className="premium-modal-card">
+            <h3 id="logout-modal-title">Are you sure you want to logout?</h3>
+            <div className="premium-modal-actions">
+              <button type="button" className="premium-modal-cancel" onClick={() => setIsLogoutModalOpen(false)}>
+                Cancel
+              </button>
+              <button type="button" className="premium-modal-danger" onClick={confirmLogout}>
+                Confirm logout
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 };

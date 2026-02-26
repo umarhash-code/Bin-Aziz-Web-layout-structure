@@ -1,4 +1,4 @@
-import { useMemo, useState, type FC, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type FC, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   HiOutlineAcademicCap,
@@ -14,6 +14,8 @@ import {
   HiOutlineSquares2X2,
 } from "react-icons/hi2";
 import useRevealOnScroll from "../hooks/useRevealOnScroll";
+import { api } from "../lib/api";
+import { isLoggedIn } from "../lib/auth";
 
 type CourseCategory =
   | "All"
@@ -24,11 +26,12 @@ type CourseCategory =
   | "AI";
 
 type Course = {
+  _id?: string;
   title: string;
   description: string;
   duration: string;
   level: "Beginner" | "Intermediate" | "Advanced";
-  price: string;
+  price: string | number;
   category: Exclude<CourseCategory, "All">;
   icon: ReactNode;
 };
@@ -104,24 +107,53 @@ const Courses: FC = () => {
 
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<CourseCategory>("All");
+  const [apiCourses, setApiCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        const response = await api.listCourses();
+        const mapped = response.courses.map((course) => ({
+          _id: course._id,
+          title: course.title,
+          description: course.description,
+          duration: course.duration,
+          level: course.level,
+          price: `PKR ${course.price.toLocaleString()}`,
+          category: (categories.includes(course.category as CourseCategory) ? course.category : "Web Development") as Exclude<
+            CourseCategory,
+            "All"
+          >,
+          icon: <HiOutlineAcademicCap />,
+        }));
+        setApiCourses(mapped);
+      } catch {
+        setApiCourses([]);
+      }
+    };
+
+    void loadCourses();
+  }, []);
+
+  const sourceCourses = apiCourses.length ? apiCourses : courses;
 
   const filteredCourses = useMemo(() => {
     if (activeCategory === "All") {
-      return courses;
+      return sourceCourses;
     }
 
-    return courses.filter((course) => course.category === activeCategory);
-  }, [activeCategory]);
+    return sourceCourses.filter((course) => course.category === activeCategory);
+  }, [activeCategory, sourceCourses]);
 
-  const onEnrollNow = (courseTitle: string) => {
-    const isLoggedIn = localStorage.getItem("binazizLoggedIn") === "true";
+  const onEnrollNow = (courseId: string | undefined, courseTitle: string) => {
+    const loggedIn = isLoggedIn();
 
-    if (!isLoggedIn) {
+    if (!loggedIn) {
       navigate("/login", { state: { redirectTo: "/courses", selectedCourse: courseTitle } });
       return;
     }
 
-    navigate("/payment", { state: { selectedCourse: courseTitle } });
+    navigate("/payment", { state: { selectedCourse: courseTitle, selectedCourseId: courseId } });
   };
 
   return (
@@ -166,7 +198,7 @@ const Courses: FC = () => {
               <strong className="course-price">{course.price}</strong>
             </div>
 
-            <button type="button" className="course-enroll-btn" onClick={() => onEnrollNow(course.title)}>
+            <button type="button" className="course-enroll-btn" onClick={() => onEnrollNow(course._id, course.title)}>
               Enroll Now
             </button>
           </article>
@@ -189,7 +221,7 @@ const Courses: FC = () => {
             <li>Mentor feedback and implementation roadmap</li>
             <li>Career-focused capstone and completion certificate</li>
           </ul>
-          <button type="button" className="course-enroll-btn" onClick={() => onEnrollNow("AI for Business & Automation")}> 
+          <button type="button" className="course-enroll-btn" onClick={() => onEnrollNow(undefined, "AI for Business & Automation")}> 
             Enroll Now
           </button>
         </div>

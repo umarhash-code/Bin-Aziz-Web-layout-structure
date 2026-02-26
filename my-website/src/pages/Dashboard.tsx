@@ -11,6 +11,8 @@ import {
   FaUserCircle,
 } from "react-icons/fa";
 import useRevealOnScroll from "../hooks/useRevealOnScroll";
+import { api } from "../lib/api";
+import { clearSession, getCurrentUser, isLoggedIn } from "../lib/auth";
 import "./Dashboard.css";
 
 type DashboardState = {
@@ -22,13 +24,32 @@ const Dashboard: FC = () => {
   const location = useLocation();
   const state = (location.state as DashboardState | null) ?? null;
   const [isLoading, setIsLoading] = useState(true);
+  const [myOrders, setMyOrders] = useState<Array<{ _id: string; itemTitle: string; amount: number; status: string }>>([]);
+  const currentUser = getCurrentUser();
 
   useRevealOnScroll(".dashboard-reveal");
 
   useEffect(() => {
+    if (!isLoggedIn()) {
+      navigate("/login", { state: { redirectTo: "/dashboard" } });
+      return;
+    }
+
     const loaderTimer = window.setTimeout(() => setIsLoading(false), 1200);
+
+    const loadOrders = async () => {
+      try {
+        const response = await api.myOrders();
+        setMyOrders(response.orders.map((order) => ({ _id: order._id, itemTitle: order.itemTitle, amount: order.amount, status: order.status })));
+      } catch {
+        setMyOrders([]);
+      }
+    };
+
+    void loadOrders();
+
     return () => window.clearTimeout(loaderTimer);
-  }, []);
+  }, [navigate]);
 
   const enrolledCourse = state?.enrolledCourse ?? "Selected Course";
   const stats = [
@@ -65,7 +86,7 @@ const Dashboard: FC = () => {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("binazizLoggedIn");
+    clearSession();
     navigate("/courses");
   };
 
@@ -89,7 +110,7 @@ const Dashboard: FC = () => {
         <div className="dashboard-user-mini">
           <FaUserCircle aria-hidden="true" />
           <div>
-            <strong>Umar</strong>
+            <strong>{currentUser?.name ?? "User"}</strong>
             <p>Premium Student</p>
           </div>
         </div>
@@ -98,7 +119,7 @@ const Dashboard: FC = () => {
       <div className="dashboard-main">
         <div className="dashboard-welcome-card dashboard-reveal reveal-on-scroll">
           <div>
-            <h1>Welcome back, Umar</h1>
+            <h1>Welcome back, {currentUser?.name ?? "Student"}</h1>
             <p>Continue learning and track your progress.</p>
           </div>
           <div className="dashboard-progress-circle" style={{ "--progress": 72 } as CSSProperties}>
@@ -120,6 +141,12 @@ const Dashboard: FC = () => {
                   <p>{item.label}</p>
                 </article>
               ))}
+          {!isLoading ? (
+            <article className="dashboard-stat-card" key="orders">
+              <h3>{myOrders.length}</h3>
+              <p>Total Orders</p>
+            </article>
+          ) : null}
         </div>
 
         <section className="dashboard-section dashboard-reveal reveal-on-scroll">
