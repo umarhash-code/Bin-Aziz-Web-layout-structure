@@ -22,11 +22,17 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     }
   }
 
-  const response = await fetch(`${API_BASE}${path}`, {
-    method: options.method || "GET",
-    headers,
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      method: options.method || "GET",
+      headers,
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
+  } catch {
+    throw new Error("Unable to connect to server. Check backend URL and CORS settings.");
+  }
 
   const data = (await response.json().catch(() => ({}))) as { message?: string } & T;
 
@@ -39,7 +45,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 
 export const api = {
   signup: (payload: { name: string; email: string; password: string }) =>
-    request<{ token: string; user: { id: string; name: string; email: string; role: "user" | "admin" } }>("/auth/register", {
+    request<{ message: string; user: { id: string; name: string; email: string; role: "user" | "admin" } }>("/auth/register", {
       method: "POST",
       body: payload,
     }),
@@ -58,12 +64,7 @@ export const api = {
       "/blog"
     ),
   buyCourse: (courseId: string) => request<{ order: { _id: string; itemTitle: string; amount: number } }>(`/orders/courses/${courseId}/buy`, { method: "POST", auth: true }),
-  orderService: (payload: { serviceName: string; details: string; budget: number }) =>
-    request<{ order: { _id: string; itemTitle: string; amount: number } }>("/orders/services/order", {
-      method: "POST",
-      auth: true,
-      body: payload,
-    }),
+  orderService: (payload: { serviceName: string; details: string; budget: number }) => Promise.reject(new Error(`Service ordering is not available yet for "${payload.serviceName}".`)),
   myOrders: () => request<{ orders: Array<{ _id: string; itemTitle: string; amount: number; status: string; type: string; createdAt: string }> }>("/orders/my", { auth: true }),
   adminUsers: () =>
     request<{ users: Array<{ _id: string; name: string; email: string; role: "user" | "admin"; isActive: boolean }> }>("/admin/users", { auth: true }),

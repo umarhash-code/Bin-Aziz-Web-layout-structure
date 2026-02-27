@@ -26,7 +26,9 @@ const Payment: FC = () => {
       if (state?.selectedCourseId) {
         await api.buyCourse(state.selectedCourseId);
       } else if (state?.selectedService) {
-        await api.orderService({ serviceName: state.selectedService, details: "Requested from website", budget: 10000 });
+        setError("Service ordering is not available yet. Please contact support to place a service order.");
+        setLoading(false);
+        return;
       }
 
       navigate("/dashboard", { state: { enrolledCourse: state?.selectedCourse ?? state?.selectedService ?? "Selected Item" } });

@@ -29,8 +29,9 @@ const Signup: FC = () => {
     setLoading(true);
 
     try {
-      const response = await api.signup({ name, email, password });
-      saveSession(response.token, response.user);
+      await api.signup({ name, email, password });
+      const loginResponse = await api.login({ email, password });
+      saveSession(loginResponse.token, loginResponse.user);
       navigate("/courses");
     } catch (submitError) {
       const message = submitError instanceof Error ? submitError.message : "Signup failed";
