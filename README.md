@@ -463,6 +463,8 @@ curl -X GET http://localhost:5000/api/orders/purchased-courses \
 
 ### Cloudflare Only (Pages + Tunnel)
 
+Quick guide: `server/DEPLOY_CLOUDFLARE.md`
+
 1. Deploy frontend to **Cloudflare Pages**
   - Root directory: `my-website`
   - Build command: `npm run build`
