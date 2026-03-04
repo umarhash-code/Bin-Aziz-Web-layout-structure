@@ -461,6 +461,27 @@ curl -X GET http://localhost:5000/api/orders/purchased-courses \
 
 ## 🚢 Production Deployment
 
+### Cloudflare Only (Pages + Tunnel)
+
+1. Deploy frontend to **Cloudflare Pages**
+  - Root directory: `my-website`
+  - Build command: `npm run build`
+  - Build output directory: `dist`
+  - Pages env var: `VITE_API_BASE_URL=https://api.yourdomain.com/api`
+
+2. Run backend locally or on your server
+  - `npm --prefix server install`
+  - `npm --prefix server run start`
+
+3. Expose backend via **Cloudflare Tunnel**
+  - `cloudflared tunnel login`
+  - `cloudflared tunnel create binaziz-api`
+  - `cloudflared tunnel route dns binaziz-api api.yourdomain.com`
+  - `cloudflared tunnel run --config server/cloudflared.config.example.yml binaziz-api`
+
+4. Set backend CORS allowlist
+  - In `server/.env`, set `CORS_ORIGINS` with your Pages/custom domains.
+
 ### Single Service Deploy (Recommended for custom domain)
 
 Deploy from repository root with these commands:

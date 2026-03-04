@@ -4,6 +4,7 @@ import morgan from "morgan";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { env } from "./config/env.js";
 
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
@@ -20,7 +21,22 @@ export function createApp() {
   const frontendDist = path.resolve(__dirname, "../../my-website/dist");
   const frontendIndex = path.join(frontendDist, "index.html");
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin(origin, callback) {
+        if (!origin) {
+          return callback(null, true);
+        }
+
+        if (env.corsOrigins.length === 0 || env.corsOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+
+        return callback(new Error("CORS origin not allowed"));
+      },
+      credentials: true,
+    })
+  );
   app.use(express.json({ limit: "2mb" }));
   app.use(morgan("dev"));
 

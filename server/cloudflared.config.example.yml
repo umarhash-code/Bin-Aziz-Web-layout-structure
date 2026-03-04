@@ -1,0 +1,7 @@
+tunnel: binaziz-api
+credentials-file: C:\\Users\\<YOUR_WINDOWS_USER>\\.cloudflared\\<TUNNEL_ID>.json
+
+ingress:
+  - hostname: api.yourdomain.com
+    service: http://localhost:5000
+  - service: http_status:404
