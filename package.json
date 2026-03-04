@@ -1,5 +1,13 @@
 {
-  "dependencies": {
-    "react-router-dom": "^7.13.0"
+  "name": "bin-aziz-platform",
+  "private": true,
+  "workspaces": [
+    "my-website",
+    "server"
+  ],
+  "scripts": {
+    "dev": "npm --prefix server run dev",
+    "build": "npm --prefix my-website run build",
+    "start": "npm --prefix server run start"
   }
 }

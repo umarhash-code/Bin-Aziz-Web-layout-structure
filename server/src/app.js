@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
@@ -12,6 +15,10 @@ import userRoutes from "./routes/user.routes.js";
 
 export function createApp() {
   const app = express();
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const frontendDist = path.resolve(__dirname, "../../my-website/dist");
+  const frontendIndex = path.join(frontendDist, "index.html");
 
   app.use(cors());
   app.use(express.json({ limit: "2mb" }));
@@ -24,6 +31,13 @@ export function createApp() {
   app.use("/api/orders", orderRoutes);
   app.use("/api/users", userRoutes);
   app.use("/api/admin", adminRoutes);
+
+  if (fs.existsSync(frontendIndex)) {
+    app.use(express.static(frontendDist));
+    app.get(/^\/(?!api(?:\/|$)).*/, (_req, res) => {
+      res.sendFile(frontendIndex);
+    });
+  }
 
   app.use((err, _req, res, _next) => {
     const message = err?.message || "Internal server error";

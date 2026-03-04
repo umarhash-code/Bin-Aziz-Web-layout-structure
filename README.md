@@ -461,6 +461,32 @@ curl -X GET http://localhost:5000/api/orders/purchased-courses \
 
 ## 🚢 Production Deployment
 
+### Single Service Deploy (Recommended for custom domain)
+
+Deploy from repository root with these commands:
+
+```bash
+npm install
+npm run build
+npm start
+```
+
+This uses root scripts to:
+- build frontend in `my-website/dist`
+- start backend from `server/src/index.js`
+- serve the frontend through Express on the same domain
+
+### Required Environment Variables
+
+Set these in your hosting dashboard:
+
+```env
+PORT=5000
+MONGO_URI=<your mongodb atlas connection string>
+JWT_SECRET=<strong random secret>
+NODE_ENV=production
+```
+
 ### Environment Checklist
 
 - [ ] Set strong `JWT_SECRET` (generate: `openssl rand -base64 32`)
