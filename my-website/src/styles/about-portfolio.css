@@ -290,44 +290,6 @@
   font-size: 0.9rem;
 }
 
-/* Founder Profile */
-.founder-profile {
-  text-align: center;
-}
-
-.founder-profile h2 {
-  color: #0f172a;
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-
-.founder-card {
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
-  max-width: 400px;
-  margin: 0 auto;
-  color: #1e293b;
-  border: 1px solid #dbeafe;
-}
-
-.founder-avatar {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.founder-card h3 {
-  color: #1e3a8a;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.founder-card p {
-  color: #334155;
-  margin-bottom: 0.5rem;
-}
-
 /* Services Page */
 .services-hero-panel h1 {
   color: #f1f5f9;
@@ -968,11 +930,6 @@
   box-shadow: 0 10px 24px rgba(15, 118, 110, 0.15);
 }
 
-.portfolio-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
 .portfolio-logo {
   width: 100%;
   max-width: 100%;
@@ -1013,21 +970,6 @@
 .portfolio-link:hover {
   border-bottom-color: #115e59;
   transform: translateX(4px);
-}
-
-.project-detail-logo {
-  width: 100%;
-  max-width: 190px;
-  max-height: 90px;
-  height: 90px;
-  display: block;
-  margin-bottom: 1rem;
-  border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid #ccfbf1;
-  padding: 0.3rem;
-  box-shadow: 0 3px 10px rgba(15, 118, 110, 0.08);
-  object-fit: contain;
 }
 
 @media (max-width: 768px) {

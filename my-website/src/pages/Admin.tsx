@@ -36,7 +36,9 @@ const Admin: FC = () => {
 
   useEffect(() => {
     if (isAdmin()) {
-      void loadUsers();
+      queueMicrotask(() => {
+        void loadUsers();
+      });
     }
   }, []);
 

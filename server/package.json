@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
+    "reset:admin": "node scripts/reset-admin-password.js",
     "backup:json": "node scripts/backup-json.js",
     "restore:json": "node scripts/restore-json.js"
   },
